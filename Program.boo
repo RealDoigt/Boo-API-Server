@@ -2,4 +2,8 @@
 
 import System
 
-Server.Start()
+# Server.Start()
+
+print StringServices.FindFirstLongestSequence("aeiouuuuuuu")
+
+Console.ReadKey(true)

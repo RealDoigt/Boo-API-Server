@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.boo" />
     <Compile Include="CensorServices.boo" />
+    <Compile Include="CharacterSequence.boo" />
     <Compile Include="DeconstructedRequest.boo" />
     <Compile Include="EncodedText.boo" />
     <Compile Include="Program.boo" />
