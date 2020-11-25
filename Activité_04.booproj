@@ -37,7 +37,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Linq" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Text.RegularExpressions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -46,7 +48,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.boo" />
     <Compile Include="CensorServices.boo" />
-    <Compile Include="CharacterSequence.boo" />
     <Compile Include="DeconstructedRequest.boo" />
     <Compile Include="EncodedText.boo" />
     <Compile Include="Program.boo" />
@@ -55,7 +56,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Class1.cs" />
+    <None Include="banned words.nsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="favicon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
