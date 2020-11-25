@@ -2,64 +2,87 @@
 
 import System
 import System.Collections.Generic
+import System.Linq
+import System.Text.RegularExpressions
 
 static class StringServices:
 	
-	#S1
-	def FindFirstLongestSequence(arg as string):
+	
+	#S0	
+	def FindLongestSequenceIndex(arg as string, length as int):
 		
+		reg = /(\w)\1+/
+		matches = reg.Matches(arg)			
 		
-		startPosition = 0 # maybe ?
-		count = 0 # nombre de séquence
-		character = arg[0]
-		index = 1
-		sequences = List[of CharacterSequence]()
-		
-		while index < arg.Length:
-		
-			if character == arg[index]:
-				++count
+		for matching as Match in matches:
+			if length == matching.Length :
+				return matching.Index	
 
-			else: 
-				sequences.Add(CharacterSequence(startPosition, count, character, index)) 
-				count = 0
-				startPosition = index		
-				character = arg[index]					
-			
-			++index
+		return -1
 		
-		sequences.Add(CharacterSequence(startPosition, count, character, index)) 
-		longuestSequence = sequences[sequences.Count - 1]
+	#S1
+	def FindFirstLongestSequenceInterval(arg as string):
+				
+		reg = /(\w)\1+/
+		matches = reg.Matches(arg)		
+		longestSequence = 0
+		indiceFin = 0
+		position = 0
 		
-		for indice in range(sequences.Count - 2):
-			print sequences[indice].Count
-			print longuestSequence.Count
-			if sequences[indice].Count > longuestSequence.Count:
-				longuestSequence = sequences[indice]
-			
-		return "[$(longuestSequence.StartPosition), $(longuestSequence.EndPosition))"
+		for matching as Match in matches:
+			if longestSequence < matching.Length:
+				longestSequence = matching.Length
+				position = matching.Index
+		
+		indiceFin = longestSequence + position
+		return "[$position, $indiceFin)"
 	
 	#S2
 	def ReverseWordOrder(arg as string):
-		pass
-	
-	#S3
-	def ReverseCharacterOrder(arg as string):
-		pass
-	
-	#S4
-	def RemoveCharacter(arg as string):
-		pass
 		
-	#S5
-	def RemoveCharacterBeginningEnd(arg as string):
+		
+		#input = arg
+		#result = string.Join(" ", Array.Reverse(input.Split(char(' '))))
+		
+		#return result
 		pass
 	
-	#S6
-	def ReplaceBadWords(arg as string):
-		pass
+	#S3 DEMANDER AU PROF SI C'EST LEGIT
+	def ReverseCharacterOrder(arg as string):
+		
+		charArray = arg.ToCharArray()
+		Array.Reverse(charArray)
+		
+		return charArray
+		
 	
-	#TODO: renommer de façon à réfléter le fonctionnement réel.
-	#S0	
-	def FindNumberIndex(arg as string):
-		pass
+	#S4  WOOHOO
+	def RemoveCharacterBeginning(arg as string, character as char):
+	
+		result = arg
+		result = result.Trim()
+		
+		if result[0] == character:
+			result = result[1:]
+			
+		return result
+		
+	#S5 TODO VOIR H-DEV
+	def RemoveCharacterEnd(arg as string, character as char):
+		
+		result = arg
+		
+		if result[result.Length - 1] == character:
+			result = result[:result.Length - 1]
+			
+		return result
+	
+	#S6 TODO VOIR H-DEV
+	def ReplaceCharacterBeginningEnd(arg as string, character as char):
+		
+		str = RemoveCharacterBeginning(arg, character)
+		str = RemoveCharacterEnd(str, character)
+	
+		return str
+		
+	
