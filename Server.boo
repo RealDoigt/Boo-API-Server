@@ -10,6 +10,8 @@ static class Server:
 	
 	# En BOO, les membres sont public par défaut
 	private PORT = 5000
+	private URL_CENSURE = "censorservices"
+	private URL_CHAINE = "stringservices"
 	
 	private def StartServer():
 		
@@ -82,9 +84,24 @@ static class Server:
 				try:
 					
 					request = DeconstructedRequest(context)
-					print request.ToString()
-					# TODO: remplacer x par le vrai text
-					SendText(context.Response, "x", context.Request.ContentEncoding)
+					
+					if request.ServiceVersion == "v1":
+						
+						if request.ServiceURL == URL_CENSURE:
+							
+							if request["service"] == "rbw":
+								pass
+								
+							elif request["service"] == "gwl":
+								pass
+							
+							else:
+								SendText(context.Response, "Invalid Censor Service GET", context.Request.ContentEncoding)
+							
+						elif request.ServiceURL == URL_CHAINE:
+							pass
+					
+					#SendText(context.Response, "x", context.Request.ContentEncoding)
 				
 				except e:
 					

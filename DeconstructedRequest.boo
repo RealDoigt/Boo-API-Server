@@ -32,14 +32,7 @@ class DeconstructedRequest:
 		URIDelimiters = "/?".ToCharArray()
 		parametersDelimiter = "&".ToCharArray()
 		singleParameterDelimiter = "=".ToCharArray()
-		
-		# Pour une raison obscure, les gens qui ont fait Boo voulait un Split() qui prend un pointeur!
-		# L'ironie est que Boo est codé... en C#. Ce qui veut dire que quelque part dans le code, il y a un bloc unsafe {}
-		# avec toute la patente de Split() dedans. C'est vraiment fort lol
 		deconstructedURI = context.Request.RawUrl.Split(*URIDelimiters)
-		
-//		for n in range(deconstructedURI.Length):
-//			print "$n $(deconstructedURI[n])"
 		
 		# Il va créer des cases vides, on ignore donc les index 0 & 3
 		serviceURL = deconstructedURI[1] # stringservice dans stringservice/v1/?<params>
@@ -56,7 +49,10 @@ class DeconstructedRequest:
 		result = "URL: $serviceURL Version: $serviceVersion"
 		
 		for param in params:
-			# En Boo, les concatenations avec $ et $() utilisent StringBuilder. Ce qui est beaucoup plus efficace qu'un += 
+			# En Boo, les interpolations avec $ et $() utilisent StringBuilder. Ce qui est beaucoup plus efficace qu'un += 
 			result = "$result $(param.Key): $(param.Value)"
 			
 		return result
+		
+	#def Contains(key as string):
+		#return params.ContainsKey(key)
