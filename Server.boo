@@ -131,12 +131,26 @@ static class Server:
 			
 	
 	# TODO RETOURNE STRING
-	private def ExecutePOSTService(request as DeconstructedRequest) as string:
-		pass
+	private def ExecutePOSTService(context as HttpListenerContext):
+		
+		if context.Request.RawUrl == "/$URL_CENSURE/v1":
+		
+			encodedText = GetText(context.Request)
+			CensorServices.AddWordsToList(encodedText.text.Split(char(' ')))
+			return "Success"
+		
+		return "Fail"
 	
 	# TODO RETOURNE STRING
-	private def ExecuteDELETEService(request as DeconstructedRequest) as string:
-		pass
+	private def ExecuteDELETEService(context as HttpListenerContext):
+		
+		if context.Request.RawUrl == "/$URL_CENSURE/v1":
+		
+			encodedText = GetText(context.Request)
+			CensorServices.RemoveWordFromList(encodedText.text)
+			return "Success"
+		
+		return "Fail"
 		
 	def Start():
 		
@@ -147,8 +161,6 @@ static class Server:
 			
 			Console.ReadKey(true)
 			fini = true
-			
-		send = {text as string, ct as HttpListenerContext|SendText(ct.Response, text, ct.Request.ContentEncoding)}
 		
 		fil = Thread(EndServiceOnInput)
 		fil.Start()
@@ -160,6 +172,12 @@ static class Server:
 			
 			if context.Request.RawUrl.Contains("favicon"):
 				SendIcon(context.Response)
+				
+			elif context.Request.HttpMethod == "POST":
+				SendText(context.Response, ExecutePOSTService(context), context.Request.ContentEncoding)
+							
+			elif context.Request.HttpMethod == "DELETE":
+				SendText(context.Response, ExecuteDELETEService(context), context.Request.ContentEncoding)
 			
 			else:
 				
@@ -170,13 +188,7 @@ static class Server:
 					if request.ServiceVersion == "v1":
 						
 						if context.Request.HttpMethod == "GET":
-							send(ExecuteGETService(request), context)
-							
-						elif context.Request.HttpMethod == "POST":
-							send(ExecutePOSTService(request), context)
-							
-						elif context.Request.HttpMethod == "DELETE":
-							send(ExecuteDELETEService(request), context)
+							SendText(context.Response, ExecuteGETService(request), context.Request.ContentEncoding)
 							
 						else:
 							SendText(context.Response, "Method Not Supported", context.Request.ContentEncoding)
