@@ -54,5 +54,5 @@ class DeconstructedRequest:
 			
 		return result
 		
-	#def Contains(key as string):
-		#return params.ContainsKey(key)
+	def Contains(key as string):
+		return params.ContainsKey(key)

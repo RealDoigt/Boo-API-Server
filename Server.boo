@@ -52,6 +52,91 @@ static class Server:
 					
 				else:
 					return EncodedText("", encoding)
+					
+	# TODO RETOURNE STRING				
+	private def ExecuteGETService(request as DeconstructedRequest):
+		
+		if request.ServiceURL == URL_CENSURE:
+			
+			if request["service"] == "rbw": # Replace Bad Words
+				if request.Contains("s"):
+					return CensorServices.ReplaceBadWords(request["s"])
+				
+			if request["service"] == "gbwl": # Get Bad Word List
+				
+				if request.Contains("o"):
+					
+					if request["o"] == "alphabetical":
+						return CensorServices.GetAlphabeticalWordList(false)
+						
+					if request["o"] == "invertedalphabetical":
+						return CensorServices.GetAlphabeticalWordList(true)
+						
+					if request["o"] == "ascendingLength":
+						return CensorServices.GetWordListBySize(false)
+						
+					if request["o"] == "decreasingLength":
+						return CensorServices.GetWordListBySize(true)	
+					
+					return "Invalid Option"
+						
+				return CensorServices.GetWordList()
+				
+			return "Invalid Request"
+			
+		if request.ServiceURL == URL_CHAINE:
+			
+			if request["service"] == "flsi": #Find Longest Sequence Index
+				
+				if request.Contains("s") and request.Contains("n"):
+					
+					n as int
+					
+					if int.TryParse(request["n"], n):
+						return StringServices.FindLongestSequenceIndex(request["s"], n).ToString()
+						
+					return "n is not a number"
+				
+			if request["service"] == "ffls": #Find First Longest Sequence
+				if request.Contains("s"):
+					return StringServices.FindFirstLongestSequenceInterval(request["s"])
+				
+			if request["service"] == "rwo": #Reverse Word Order
+				if request.Contains("s"):
+					return StringServices.ReverseWordOrder(request["s"])
+					
+			if request["service"] == "rco": #Reverse Character Order
+				if request.Contains("s"):
+					return StringServices.ReverseCharacterOrder(request["s"])
+					
+			if request["service"] == "rcb": #Remove Character Beginning
+				if request.Contains("s") and request.Contains("c"):
+					return StringServices.RemoveCharacterBeginning(request["s"], request["c"][0])
+					
+			if request["service"] == "rce": #Remove Character End
+				if request.Contains("s") and request.Contains("c"):
+					return StringServices.RemoveCharacterEnd(request["s"], request["c"][0])
+			
+			if request["service"] == "rcbe": #Remove Character at Beginning and End
+				if request.Contains("s") and request.Contains("c"):
+					return StringServices.ReplaceCharacterBeginningEnd(request["s"], request["c"][0])
+					
+			if request["service"] == "reb": #Remove Extra Blanks
+				if request.Contains("s"):
+					return StringServices.RemoveExtraBlanks(request["s"])
+			
+			return "Service Not Found"
+			
+		return "Service Type Not Found"
+			
+	
+	# TODO RETOURNE STRING
+	private def ExecutePOSTService(request as DeconstructedRequest) as string:
+		pass
+	
+	# TODO RETOURNE STRING
+	private def ExecuteDELETEService(request as DeconstructedRequest) as string:
+		pass
 		
 	def Start():
 		
@@ -62,6 +147,8 @@ static class Server:
 			
 			Console.ReadKey(true)
 			fini = true
+			
+		send = {text as string, ct as HttpListenerContext|SendText(ct.Response, text, ct.Request.ContentEncoding)}
 		
 		fil = Thread(EndServiceOnInput)
 		fil.Start()
@@ -71,14 +158,9 @@ static class Server:
 			context = listener.GetContext()
 			print "requête à l'uri $(context.Request.RawUrl) avec méthode $(context.Request.HttpMethod) reçue."
 			
-			if context.Request.RawUrl.Contains("favicon.ico"):
+			if context.Request.RawUrl.Contains("favicon"):
 				SendIcon(context.Response)
 			
-			elif context.Request.HttpMethod != "GET":
-				
-				text = GetText(context.Request)
-				SendText(context.Response, text.text, text.encoding)
-				
 			else:
 				
 				try:
@@ -87,27 +169,25 @@ static class Server:
 					
 					if request.ServiceVersion == "v1":
 						
-						if request.ServiceURL == URL_CENSURE:
+						if context.Request.HttpMethod == "GET":
+							send(ExecuteGETService(request), context)
 							
-							if request["service"] == "rbw":
-								pass
-								
-							elif request["service"] == "gwl":
-								pass
+						elif context.Request.HttpMethod == "POST":
+							send(ExecutePOSTService(request), context)
 							
-							else:
-								SendText(context.Response, "Invalid Censor Service GET", context.Request.ContentEncoding)
+						elif context.Request.HttpMethod == "DELETE":
+							send(ExecuteDELETEService(request), context)
 							
-						elif request.ServiceURL == URL_CHAINE:
-							pass
+						else:
+							SendText(context.Response, "Method Not Supported", context.Request.ContentEncoding)
+							
+					else:
+						SendText(context.Response, "Version Mismatch", context.Request.ContentEncoding)
 					
-					#SendText(context.Response, "x", context.Request.ContentEncoding)
-				
 				except e:
-					
+							
 					print "Erreur: $e"
 					SendText(context.Response, "Bad Request", context.Request.ContentEncoding)
-					
 			
 		fil.Join()
 		

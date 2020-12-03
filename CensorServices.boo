@@ -53,14 +53,18 @@ static class CensorServices:
 	def GetWordList():
 		return string.Join(", ", File.ReadAllLines(BANNED_LIST_PATH))
 		
-	def GetAlphabeticalWordList():
+	def GetAlphabeticalWordList(isReversed as bool):
 		
 		bannedWords = List[of string]()
 		bannedWords.AddRange(File.ReadAllLines(BANNED_LIST_PATH))
 		bannedWords.Sort() # Comportement par défaut est l'ordre alphabétique
+		
+		if isReversed:
+			bannedWords.Reverse()
+		
 		return string.Join(", ", bannedWords)
 		
-	def GetWordListBySize():
+	def GetWordListBySize(isOrderedBySmallest as bool):
 		
 		def CompareStrings(str1 as string, str2 as string):
 			
@@ -71,11 +75,14 @@ static class CensorServices:
 				return -1
 				
 			return 0
-			
 		
 		bannedWords = List[of string]()
 		bannedWords.AddRange(File.ReadAllLines(BANNED_LIST_PATH))
 		bannedWords.Sort(CompareStrings)
+		
+		if isOrderedBySmallest:
+			bannedWords.Reverse()
+			
 		return string.Join(", ", bannedWords)
 			
 		

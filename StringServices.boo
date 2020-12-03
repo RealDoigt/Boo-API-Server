@@ -1,8 +1,6 @@
 ﻿namespace Activité_04
 
 import System
-import System.Collections.Generic
-import System.Linq
 import System.Text.RegularExpressions
 
 static class StringServices:
@@ -40,23 +38,22 @@ static class StringServices:
 	#S2
 	def ReverseWordOrder(arg as string):
 		
+		# TODO: Convertir les blancs en espaces
+		stringArray = arg.Split(char(' '))
+		Array.Reverse(stringArray)
 		
-		#input = arg
-		#result = string.Join(" ", Array.Reverse(input.Split(char(' '))))
-		
-		#return result
-		pass
+		return string.Join(" ", *stringArray)
 	
-	#S3 DEMANDER AU PROF SI C'EST LEGIT
+	#S3
 	def ReverseCharacterOrder(arg as string):
 		
 		charArray = arg.ToCharArray()
 		Array.Reverse(charArray)
 		
-		return charArray
+		return charArray.ToString()
 		
 	
-	#S4  WOOHOO
+	#S4
 	def RemoveCharacterBeginning(arg as string, character as char):
 	
 		result = arg
@@ -67,7 +64,7 @@ static class StringServices:
 			
 		return result
 		
-	#S5 TODO VOIR H-DEV
+	#S5
 	def RemoveCharacterEnd(arg as string, character as char):
 		
 		result = arg
@@ -77,12 +74,17 @@ static class StringServices:
 			
 		return result
 	
-	#S6 TODO VOIR H-DEV
+	#S6
 	def ReplaceCharacterBeginningEnd(arg as string, character as char):
 		
 		str = RemoveCharacterBeginning(arg, character)
 		str = RemoveCharacterEnd(str, character)
 	
 		return str
+	
+	#7
+	def RemoveExtraBlanks(arg as string) as string:
+		pass
+	
 		
 	
