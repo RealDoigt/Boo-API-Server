@@ -84,7 +84,8 @@ static class StringServices:
 	
 	#7
 	def RemoveExtraBlanks(arg as string) as string:
-		pass
-	
+		
+		myString = Regex.Replace(arg, " {2,}", " ");
+		return myString
 		
 	
