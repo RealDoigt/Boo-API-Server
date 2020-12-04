@@ -42,7 +42,7 @@ class DeconstructedRequest:
 		for param in serviceParameters:
 			
 			tempParams = param.Split(*singleParameterDelimiter)
-			params[tempParams[0]] = tempParams[1]
+			params[tempParams[0]] = StringServices.ReplaceHTMLSpaceCode(tempParams[1])
 		
 	override def ToString():
 		

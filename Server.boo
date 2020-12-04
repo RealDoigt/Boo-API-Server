@@ -33,11 +33,14 @@ static class Server:
 			
 	private def SendIcon(response as HttpListenerResponse):
 		
+		#Ce code sert à traiter avec les navigateurs web.
 		icon = Drawing.Icon("favicon.ico")
 		response.ContentLength64 = FileInfo("favicon.ico").Length
-		icon.Save(response.OutputStream)
-		#using os = response.OutputStream:
-		#	os.Write(buffer, 0, buffer.Length)
+		
+		try:
+			icon.Save(response.OutputStream)
+		except:
+			pass
 			
 	private def GetText(request as HttpListenerRequest):
 		
@@ -72,10 +75,10 @@ static class Server:
 					if request["o"] == "invertedalphabetical":
 						return CensorServices.GetAlphabeticalWordList(true)
 						
-					if request["o"] == "ascendingLength":
+					if request["o"] == "ascendinglength":
 						return CensorServices.GetWordListBySize(false)
 						
-					if request["o"] == "decreasingLength":
+					if request["o"] == "decreasinglength":
 						return CensorServices.GetWordListBySize(true)	
 					
 					return "Invalid Option"
@@ -129,8 +132,6 @@ static class Server:
 			
 		return "Service Type Not Found"
 			
-	
-	# TODO RETOURNE STRING
 	private def ExecutePOSTService(context as HttpListenerContext):
 		
 		if context.Request.RawUrl == "/$URL_CENSURE/v1":
@@ -141,7 +142,6 @@ static class Server:
 		
 		return "Fail"
 	
-	# TODO RETOURNE STRING
 	private def ExecuteDELETEService(context as HttpListenerContext):
 		
 		if context.Request.RawUrl == "/$URL_CENSURE/v1":

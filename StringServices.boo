@@ -5,6 +5,8 @@ import System.Text.RegularExpressions
 
 static class StringServices:
 	
+	def ReplaceHTMLSpaceCode(arg as string):
+		return arg.Replace("%20", " ")
 	
 	#S0	
 	def FindLongestSequenceIndex(arg as string, length as int):
@@ -50,7 +52,7 @@ static class StringServices:
 		charArray = arg.ToCharArray()
 		Array.Reverse(charArray)
 		
-		return charArray.ToString()
+		return String(charArray)
 		
 	
 	#S4
@@ -85,7 +87,7 @@ static class StringServices:
 	#7
 	def RemoveExtraBlanks(arg as string) as string:
 		
-		myString = Regex.Replace(arg, " {2,}", " ");
+		myString = Regex.Replace(arg, /\s\s+/.ToString(), " ")
 		return myString
 		
 	
